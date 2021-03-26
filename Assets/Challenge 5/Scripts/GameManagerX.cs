@@ -5,11 +5,34 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+struct ListenerData
+{
+	public MonoBehaviour m;
+	public string l;
+
+	public ListenerData(MonoBehaviour listener, string reader) : this()
+	{
+		this.m = listener;
+		this.l = reader;
+	}
+}
+
 public class GameManagerX : MonoBehaviour
 {
 	public TextMeshProUGUI scoreText;
 	public GameObject gameOverScreen;
 	public GameObject titleScreen;
+	private List<ListenerData> listenerStart = new List<ListenerData>();
+	private List<ListenerData> listenerEnd = new List<ListenerData>();
+
+	internal void listenStart(MonoBehaviour listener, string reader)
+	{
+		listenerStart.Add(new ListenerData(listener, reader));
+	}
+	internal void listenEnd(MonoBehaviour listener, string reader)
+	{
+		listenerEnd.Add(new ListenerData(listener, reader));
+	}
 
 	public List<GameObject> targetPrefabs;
 
@@ -31,6 +54,10 @@ public class GameManagerX : MonoBehaviour
 		UpdateScore(0);
 		gameOverScreen.SetActive(false);
 		titleScreen.SetActive(false);
+		foreach (ListenerData listener in listenerStart)
+		{
+			listener.m.Invoke(listener.l, 0);
+		}
 	}
 
 	// While game is active spawn a random target
@@ -78,6 +105,11 @@ public class GameManagerX : MonoBehaviour
 	{
 		gameOverScreen.SetActive(true);
 		isGameActive = false;
+
+		foreach (ListenerData listener in listenerEnd)
+		{
+			listener.m.Invoke(listener.l, 0);
+		}
 	}
 
 	// Restart game by reloading the scene
