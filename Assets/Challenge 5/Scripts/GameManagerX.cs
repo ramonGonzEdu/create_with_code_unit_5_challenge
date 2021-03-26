@@ -8,9 +8,8 @@ using UnityEngine.UI;
 public class GameManagerX : MonoBehaviour
 {
 	public TextMeshProUGUI scoreText;
-	public TextMeshProUGUI gameOverText;
+	public GameObject gameOverScreen;
 	public GameObject titleScreen;
-	public Button restartButton;
 
 	public List<GameObject> targetPrefabs;
 
@@ -30,6 +29,7 @@ public class GameManagerX : MonoBehaviour
 		StartCoroutine(SpawnTarget());
 		score = 0;
 		UpdateScore(0);
+		gameOverScreen.SetActive(false);
 		titleScreen.SetActive(false);
 	}
 
@@ -76,8 +76,7 @@ public class GameManagerX : MonoBehaviour
 	// Stop game, bring up game over text and restart button
 	public void GameOver()
 	{
-		gameOverText.gameObject.SetActive(true);
-		restartButton.gameObject.SetActive(false);
+		gameOverScreen.SetActive(true);
 		isGameActive = false;
 	}
 
